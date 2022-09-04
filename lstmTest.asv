@@ -1,0 +1,15 @@
+%Lstm test
+
+
+
+Data = load('JapaneseVowelsTest.mat');
+xtest = Data.XTest(1:3)
+figure(1)
+for i=1:12
+    subplot(12,1,13-i);
+    plot(xtest{1}(i,:));
+    ylabel(i);
+end
+
+miniBach =27;
+classify(net,xtest,'MiniBatchSize',miniBach);

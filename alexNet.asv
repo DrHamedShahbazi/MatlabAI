@@ -1,0 +1,50 @@
+%transfer Learning alexNet
+
+
+
+image  = imageDatastore('MerchData','IncludeSubfolders',true,'LabelSource','foldernames');
+
+
+[trainI,valI] = splitEachLabel(image,0.75,'randomized');
+
+numbTrain = numel(trainI.Labels);
+idx = randperm(numbTrain,16);
+figure(1)
+
+
+for i =1:16
+    subplot(4,4,i);
+    I = readimage(trainI,idx(i));
+    imshow(I);
+end
+
+
+net = alexnet;
+
+firstLayers = net.Layers(1:end-3);
+numClass = numel(categories(trainI.Labels));
+
+layers = [firstLayers
+          fullyConnectedLayer(numClass,'WeightLearnRateFactor',20,'BiasLearnRateFactor',20)
+          softmaxLayer
+          classificationLayer];
+      
+ options = trainingOptions('sgdm','ValidationData', valI,'ValidationFrequency',20);
+ 
+ newAlexNet = trainNetwork(trainI,layers,options);
+ 
+ 
+  pLabel = classify( newAlexNet,valI); 
+  
+  realLabel = valI.Labels;
+  
+  (pLabel ==realLabel)
+  
+  
+  
+    
+
+
+
+
+
